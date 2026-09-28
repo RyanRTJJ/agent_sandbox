@@ -24,10 +24,10 @@ case "${1:-}" in
   start)
     docker run -d --name "$CONTAINER" \
       --init \
-      --user 1000:1000 \            # syntax: "run as {user ID}:{group ID}", specified in Dockerfile
+      --user 1000:1000 \
       --read-only \
-      --tmpfs /tmp:size=64m \       # This mounts a 64 MB memory-backed filesystem at /tmp. It is writable, and its contents are lost when the container stops.
-      -v "$VOLUME":/workspace \     # syntax: v {local_volume_NAME}:{container_root_dir}. This mounts the named volume sbx-workspace at /workspace. Docker creates the volume if it does not exist. It is writable, and its contents persist after the container is removed.
+      --tmpfs /tmp:size=64m \
+      -v "$VOLUME":/workspace \
       --network none \
       --cap-drop ALL \
       --security-opt no-new-privileges \
@@ -48,3 +48,9 @@ case "${1:-}" in
     exit 1
     ;;
 esac
+
+# Comments on docker run args:
+#   -user 1000:1000 syntax: "run as {user ID}:{group ID}", specified in Dockerfile
+#   --tmpfs /tmp:size=64m: This mounts a 64 MB memory-backed filesystem at /tmp. It is writable, and its contents are lost when the container stops.
+#   -v "$VOLUME":/workspace: {local_volume_NAME}:{in_container_mount_path}. This mounts the named volume sbx-workspace at /workspace.
+#     Docker creates the volume if it does not exist. It is writable, and its contents persist after the container is removed.
